@@ -52,7 +52,7 @@ Console.WriteLine();
 // Scenario 3: Cancellation (uses CancellationService — OCP violation)
 // ---------------------------------------------------------------
 Console.WriteLine("--- Scenario 3: Cancellation ---");
-var cancellationService = new CancellationService();
+var cancellationService = new CancellationService(new FlexiblePolicy());
 var aliceReservation = reservationService.GetReservation(id1)!;
 aliceReservation.CancellationPolicy = "Flexible";
 cancellationService.CancelReservation(aliceReservation, new DateTime(2025, 6, 10));
