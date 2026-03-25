@@ -2,13 +2,12 @@ namespace HotelReservation.Services;
 
 using HotelReservation.Repositories;
 
-// ISP VIOLATION: Depends on IReservationRepository (9 methods) but only uses
-// GetById and GetTotalRevenue.
+// dépend uniquement de IReservationStats, la seule méthode utilisée ici c'est GetTotalRevenue.
 public class BillingService
 {
-    private readonly IReservationRepository _repo;
+    private readonly IReservationStats _repo;
 
-    public BillingService(IReservationRepository repo)
+    public BillingService(IReservationStats repo)
     {
         _repo = repo;
     }
