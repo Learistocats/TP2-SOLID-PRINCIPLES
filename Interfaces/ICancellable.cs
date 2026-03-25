@@ -1,13 +1,8 @@
 namespace HotelReservation.Interfaces;
 
-// LSP VIOLATION (Example 1): NonRefundableReservation implements this interface
-// but throws on Cancel(), breaking the substitution principle.
-public interface ICancellable
+// uniquement pour les reservations qui supportent vraiment l'annulation
+// en etendant IReservation, le compilateur empeche d'appeler Cancel sur une NonRefundable
+public interface ICancellableReservation : IReservation
 {
-    string Id { get; }
-    string GuestName { get; }
-    string Status { get; }
-    decimal TotalPrice { get; }
     void Cancel();
-    decimal CalculateRefund();
 }
