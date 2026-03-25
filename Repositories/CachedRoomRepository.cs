@@ -2,10 +2,9 @@ namespace HotelReservation.Repositories;
 
 using HotelReservation.Models;
 
-// LSP VIOLATION (Example 2): This implementation does not respect the contract
-// of IRoomRepository.GetAvailableRooms. It returns cached data that may be stale
-// and ignores the date parameters entirely. Substituting this for InMemoryRoomRepository
-// produces semantically incorrect results.
+// le cache est conserve uniquement pour GetById
+// GetAvailableRooms délège toujours au repo interne, les dates doivent etre respectées
+// save invalide le cache pour eviter de renvoyer des donnees perimées
 public class CachedRoomRepository : IRoomRepository
 {
     private readonly IRoomRepository _inner;
@@ -30,13 +29,12 @@ public class CachedRoomRepository : IRoomRepository
 
     public List<Room> GetAvailableRooms(DateTime from, DateTime to)
     {
-        // BUG: Returns cached data, ignores date parameters, potentially stale
-        return _cache.Values.Where(r => r.IsAvailable).ToList();
+        return _inner.GetAvailableRooms(from, to);
     }
 
     public void Save(Room room)
     {
         _inner.Save(room);
-        // BUG: Forgets to invalidate cache -> GetAvailableRooms returns stale data
+        _cache.Remove(room.Id);
     }
 }
