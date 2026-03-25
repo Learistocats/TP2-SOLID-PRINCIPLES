@@ -49,7 +49,7 @@ public class InMemoryReservationRepository : IReservationRepository
     {
         return _reservations.Values
             .Where(r => r.CheckIn >= from && r.CheckOut <= to && r.Status != "Cancelled")
-            .Sum(r => r.CalculateTotal());
+            .Sum(r => new HotelReservation.Services.BillingCalculator().CalculateTotal(r));
     }
 
     public Dictionary<string, int> GetOccupancyStats(DateTime from, DateTime to)
