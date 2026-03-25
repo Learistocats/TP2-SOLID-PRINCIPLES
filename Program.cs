@@ -3,6 +3,7 @@ using HotelReservation.Services;
 using HotelReservation.Interfaces;
 using HotelReservation.Events;
 using HotelReservation.Repositories;
+using HotelReservation.Infrastructure;
 
 Console.WriteLine("=== Le Mas des Oliviers - Hotel Management System ===");
 Console.WriteLine();
@@ -12,7 +13,7 @@ Console.WriteLine();
 // ---------------------------------------------------------------
 Console.WriteLine("--- Scenario 1: Creating Reservations ---");
 
-var reservationService = new ReservationService();
+var reservationService = new ReservationService(new ReservationDomainService(), new InMemoryReservationStore());
 
 var id1 = reservationService.CreateReservation(
     "Alice Martin", "101", new DateTime(2025, 6, 15), new DateTime(2025, 6, 18),
@@ -104,7 +105,7 @@ var bobForHousekeeping = new Reservation
     GuestCount = 2,
     RoomType = "Suite"
 };
-var bobLinenDays = bobForHousekeeping.GetLinenChangeDays();
+var bobLinenDays = new HousekeepingScheduler().GetLinenChangeDays(bobForHousekeeping);
 Console.WriteLine($"Linen change schedule for Bob Dupont (Room 201, 15/06 -> 22/06):");
 foreach (var day in bobLinenDays)
     Console.WriteLine($"  - {day:dd/MM/yyyy}");
@@ -119,7 +120,7 @@ var durandForHousekeeping = new Reservation
     GuestCount = 4,
     RoomType = "Family"
 };
-var durandLinenDays = durandForHousekeeping.GetLinenChangeDays();
+var durandLinenDays = new HousekeepingScheduler().GetLinenChangeDays(durandForHousekeeping);
 Console.WriteLine($"Cleaning tasks for Famille Durand (Room 301, 20/06 -> 25/06):");
 foreach (var day in durandLinenDays)
     Console.WriteLine($"  - {day:dd/MM/yyyy}");
