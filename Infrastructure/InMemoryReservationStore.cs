@@ -1,8 +1,10 @@
 namespace HotelReservation.Infrastructure;
 
 using HotelReservation.Models;
+using HotelReservation.Services;
 
-public class InMemoryReservationStore
+// implémentation infrastructure du contrat IReservationStore défini dans le domaine métier.
+public class InMemoryReservationStore : IReservationStore
 {
     private readonly Dictionary<string, Reservation> _reservations = new();
 

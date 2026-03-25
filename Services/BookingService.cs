@@ -1,18 +1,20 @@
 namespace HotelReservation.Services;
 
-using HotelReservation.Infrastructure;
 using HotelReservation.Models;
 
-// DIP VIOLATION (Example 1): High-level business module directly depends on
-// low-level infrastructure modules (InMemoryReservationStore, FileLogger).
-// Impossible to change storage or logging without modifying this class.
+// dépend uniquement des abstractions IReservationStore et ILogger.
+// changer le stockage ou le logging ne nécessite aucune modification ici.
 public class BookingService
 {
-    // Direct dependency on concrete implementations
-    private readonly InMemoryReservationStore _store = new();
-    private readonly FileLogger _logger = new();
-
+    private readonly IReservationStore _store;
+    private readonly ILogger _logger;
     private int _counter = 0;
+
+    public BookingService(IReservationStore store, ILogger logger)
+    {
+        _store  = store;
+        _logger = logger;
+    }
 
     public string CreateReservation(string guestName, string roomId, DateTime checkIn,
         DateTime checkOut, int guestCount, string roomType, string email)
@@ -23,23 +25,23 @@ public class BookingService
         var pricePerNight = roomType switch
         {
             "Standard" => 80m,
-            "Suite" => 200m,
-            "Family" => 120m,
+            "Suite"    => 200m,
+            "Family"   => 120m,
             _ => throw new Exception($"Unknown room type: {roomType}")
         };
 
         _counter++;
         var reservation = new Reservation
         {
-            Id = $"R-{_counter:D3}",
-            GuestName = guestName,
-            RoomId = roomId,
-            CheckIn = checkIn,
-            CheckOut = checkOut,
+            Id         = $"R-{_counter:D3}",
+            GuestName  = guestName,
+            RoomId     = roomId,
+            CheckIn    = checkIn,
+            CheckOut   = checkOut,
             GuestCount = guestCount,
-            RoomType = roomType,
-            Status = "Confirmed",
-            Email = email,
+            RoomType   = roomType,
+            Status     = "Confirmed",
+            Email      = email,
             TotalPrice = nights * pricePerNight
         };
 

@@ -1,8 +1,9 @@
 namespace HotelReservation.Infrastructure;
 
-// Simulates file-based logging (uses Console for demo purposes).
-// The SOLID violation is the direct coupling, not the I/O mechanism.
-public class FileLogger
+using HotelReservation.Services;
+
+// implémentation infrastructure du contrat ILogger défini dans le domaine métier.
+public class FileLogger : ILogger
 {
     public void Log(string message)
     {
